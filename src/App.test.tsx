@@ -30,6 +30,6 @@ describe('App Component', () => {
 
   it('renders read the docs message', () => {
     render(<App />)
-    expect(screen.getByText(/read the docs/i)).toBeInTheDocument()
+    expect(screen.getByText(/click on the vite and react logos/i)).toBeInTheDocument()
   })
 })
