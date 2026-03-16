@@ -1,0 +1,14 @@
+# Ignore artifacts:
+build
+coverage
+dist
+node_modules
+
+# Ignore all template files (JavaScript and not JavaScript):
+*.ejs
+*.htm
+*.html
+*.json
+*.md
+*.svg
+*.vue
