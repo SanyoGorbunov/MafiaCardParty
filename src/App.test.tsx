@@ -332,8 +332,8 @@ describe('App Component', () => {
       const playButton = screen.getByRole('button', { name: /play now/i })
       await user.click(playButton)
 
-      const nextButton = screen.getByRole('button', { name: /next: players/i }) as HTMLButtonElement
-      expect(nextButton.disabled).toBe(false)
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      expect((nextButton as HTMLButtonElement).disabled).toBe(false)
     })
 
     it('disables Mafia increment button when at maximum', async () => {
@@ -343,14 +343,14 @@ describe('App Component', () => {
       const playButton = screen.getByRole('button', { name: /play now/i })
       await user.click(playButton)
 
-      const mafiaIncrementBtn = screen.getByTitle('Increase mafia count') as HTMLButtonElement
+      const mafiaIncrementBtn = screen.getByTitle('Increase mafia count')
       
       // Default mafia is 2, max for 6 players is 3
       // Click increment once to get to 3
       await user.click(mafiaIncrementBtn)
       
       // Now the button should be disabled because mafia (3) == max (3 for 6 players)
-      expect(mafiaIncrementBtn.disabled).toBe(true)
+      expect((mafiaIncrementBtn as HTMLButtonElement).disabled).toBe(true)
     })
 
     it('adjusts Mafia count when Total Players is reduced below current Mafia', async () => {

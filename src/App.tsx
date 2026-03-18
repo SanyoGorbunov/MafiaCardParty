@@ -16,10 +16,8 @@ function App() {
     setCurrentScreen(ScreenType.WELCOME)
   }
 
-  const handleNextClick = (settings: GameSettings) => {
+  const handleNextClick = (_settings: GameSettings) => {
     // TODO: Navigate to Players screen (MAF-21) when implemented
-    // For now, just log the settings
-    console.log('Game settings configured:', settings)
   }
 
   return (
