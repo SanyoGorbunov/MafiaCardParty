@@ -45,7 +45,7 @@ export function WelcomeScreen({
         {/* Illustration */}
         <div className="illustration-container">
           <img
-            src="/images/welcome-illustration.png"
+            src="./images/welcome-illustration.png"
             alt="Mafia Card Party illustration"
             className="illustration"
           />

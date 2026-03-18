@@ -39,7 +39,7 @@ test.describe('Welcome Screen E2E Tests', () => {
     await expect(illustration).toBeVisible()
     await expect(illustration).toHaveAttribute(
       'src',
-      '/images/welcome-illustration.png'
+      './images/welcome-illustration.png'
     )
   })
 })

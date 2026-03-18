@@ -38,7 +38,7 @@ describe('App Component', () => {
       expect(illustration).toBeInTheDocument()
       expect(illustration).toHaveAttribute(
         'src',
-        '/images/welcome-illustration.png'
+        './images/welcome-illustration.png'
       )
     })
   })
