@@ -1,26 +1,32 @@
 import { useState } from 'react'
 import './App.css'
+import { ScreenType } from './types'
+import { WelcomeScreen, SetupScreen } from './components'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [currentScreen, setCurrentScreen] = useState<ScreenType>(
+    ScreenType.WELCOME
+  )
+
+  const handlePlayClick = () => {
+    setCurrentScreen(ScreenType.SETUP)
+  }
+
+  const handleBackClick = () => {
+    setCurrentScreen(ScreenType.WELCOME)
+  }
 
   return (
-    <>
-      <div>
-        <h1>Mafia Card Party</h1>
+    <div className="app">
+      <div className="app-container">
+        {currentScreen === ScreenType.WELCOME && (
+          <WelcomeScreen onPlay={handlePlayClick} />
+        )}
+        {currentScreen === ScreenType.SETUP && (
+          <SetupScreen onBack={handleBackClick} />
+        )}
       </div>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 

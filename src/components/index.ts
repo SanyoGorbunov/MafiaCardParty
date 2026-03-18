@@ -1,1 +1,2 @@
-// Add your React components here
+export { WelcomeScreen } from './WelcomeScreen'
+export { SetupScreen } from './SetupScreen'

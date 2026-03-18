@@ -4,43 +4,98 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/')
 })
 
-test('should display the app title', async ({ page }) => {
-  const title = page.locator('h1')
-  await expect(title).toContainText('Mafia Card Party')
+test.describe('Welcome Screen E2E Tests', () => {
+  test('should display the Welcome screen on initial load', async ({
+    page,
+  }) => {
+    const title = page.locator('h1:has-text("MAFIA")')
+    await expect(title).toBeVisible()
+  })
+
+  test('should display the game title "MAFIA"', async ({ page }) => {
+    const title = page.locator('h1')
+    await expect(title).toContainText('MAFIA')
+  })
+
+  test('should display the Play button', async ({ page }) => {
+    const playButton = page.locator('button.play-btn')
+    await expect(playButton).toBeVisible()
+    await expect(playButton).toBeEnabled()
+  })
+
+  test('should display the How to Play button', async ({ page }) => {
+    const howToPlayButton = page.locator('button.how-to-play-btn')
+    await expect(howToPlayButton).toBeVisible()
+    await expect(howToPlayButton).toBeEnabled()
+  })
+
+  test('should display the language switch', async ({ page }) => {
+    const languageBtn = page.locator('button.language-btn')
+    await expect(languageBtn).toBeVisible()
+  })
+
+  test('should display the illustration image', async ({ page }) => {
+    const illustration = page.locator('img[alt*="illustration"]')
+    await expect(illustration).toBeVisible()
+    await expect(illustration).toHaveAttribute(
+      'src',
+      '/images/welcome-illustration.png'
+    )
+  })
 })
 
-test('should render the counter button with initial count', async ({ page }) => {
-  const button = page.locator('button')
-  await expect(button).toContainText('count is 0')
-})
+test.describe('Screen Navigation E2E Tests', () => {
+  test('should navigate to Setup screen when Play button is clicked', async ({
+    page,
+  }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
 
-test('should increment counter on button click', async ({ page }) => {
-  const button = page.locator('button')
+    const setupTitle = page.locator('h1:has-text("Game Setup")')
+    await expect(setupTitle).toBeVisible()
 
-  // Initial state
-  await expect(button).toContainText('count is 0')
+    const setupDescription = page.locator('text=Placeholder setup screen')
+    await expect(setupDescription).toBeVisible()
+  })
 
-  // Click once
-  await button.click()
-  await expect(button).toContainText('count is 1')
+  test('should navigate back to Welcome screen from Setup', async ({ page }) => {
+    // Go to Setup
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
 
-  // Click again
-  await button.click()
-  await expect(button).toContainText('count is 2')
+    // Verify we're on Setup
+    const setupTitle = page.locator('h1:has-text("Game Setup")')
+    await expect(setupTitle).toBeVisible()
 
-  // Click again
-  await button.click()
-  await expect(button).toContainText('count is 3')
-})
+    // Click Back
+    const backButton = page.locator('button.back-btn')
+    await backButton.click()
 
-test('should display the vite + react message', async ({ page }) => {
-  const message = page.locator('p').filter({ hasText: /Edit.*and save to test HMR/ })
-  await expect(message).toBeVisible()
-})
+    // Verify we're back on Welcome
+    const welcomeTitle = page.locator('h1:has-text("MAFIA")')
+    await expect(welcomeTitle).toBeVisible()
+  })
 
-test('should display the learn more section', async ({ page }) => {
-  const learnMore = page.locator('p').filter({ hasText: /Click on the Vite and React logos/ })
-  await expect(learnMore).toBeVisible()
+  test('should allow multiple transitions between screens', async ({
+    page,
+  }) => {
+    const playButton = page.locator('button.play-btn')
+    const backButton = page.locator('button.back-btn')
+    const welcomeTitle = page.locator('h1:has-text("MAFIA")')
+    const setupTitle = page.locator('h1:has-text("Game Setup")') 
+
+    // First transition: Welcome -> Setup
+    await playButton.click()
+    await expect(setupTitle).toBeVisible()
+
+    // Second transition: Setup -> Welcome
+    await backButton.click()
+    await expect(welcomeTitle).toBeVisible()
+
+    // Third transition: Welcome -> Setup
+    await playButton.click()
+    await expect(setupTitle).toBeVisible()
+  })
 })
 
 test('should have proper page title', async ({ page }) => {
