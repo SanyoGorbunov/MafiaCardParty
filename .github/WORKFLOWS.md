@@ -37,6 +37,30 @@ Generates and reports unit test coverage metrics.
 - Generate coverage reports with Vitest
 - Upload coverage to Codecov
 
+### 4. Deploy to GitHub Pages Workflow (`.github/workflows/deploy.yml`)
+Manual deployment workflow triggered by user action in GitHub Actions.
+
+**Steps:**
+- Checkout code
+- Install dependencies
+- Build the project
+- Upload build artifact to GitHub Pages
+- Deploy to GitHub Pages
+
+**How to Use:**
+1. Go to the GitHub repository
+2. Click on the "Actions" tab
+3. Select "Deploy to GitHub Pages" workflow
+4. Click "Run workflow" button
+5. Confirm the execution
+
+## Important Notes
+
+You'll need to enable GitHub Pages in your repository settings:
+1. Go to Settings → Pages
+2. Under "Build and deployment", select **"GitHub Actions"** as the source
+3. **(Optional)** If your site isn't at the root of your GitHub Pages URL, add a `base` property to `vite.config.ts` (e.g., for `username.github.io/MafiaCardParty`, set `base: '/MafiaCardParty/'`)
+
 ## Required Secrets
 
 No secrets are required for these workflows to run.
