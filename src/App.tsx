@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import { ScreenType } from './types'
+import { ScreenType, GameSettings } from './types'
 import { WelcomeScreen, SetupScreen } from './components'
 
 function App() {
@@ -16,6 +16,12 @@ function App() {
     setCurrentScreen(ScreenType.WELCOME)
   }
 
+  const handleNextClick = (settings: GameSettings) => {
+    // TODO: Navigate to Players screen (MAF-21) when implemented
+    // For now, just log the settings
+    console.log('Game settings configured:', settings)
+  }
+
   return (
     <div className="app">
       <div className="app-container">
@@ -23,7 +29,7 @@ function App() {
           <WelcomeScreen onPlay={handlePlayClick} />
         )}
         {currentScreen === ScreenType.SETUP && (
-          <SetupScreen onBack={handleBackClick} />
+          <SetupScreen onBack={handleBackClick} onNext={handleNextClick} />
         )}
       </div>
     </div>
