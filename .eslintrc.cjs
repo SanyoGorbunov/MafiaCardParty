@@ -7,7 +7,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:react-hooks/recommended',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs', 'node_modules', 'vite.config.d.ts'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'node_modules', 'vite.config.d.ts', '**/*.d.ts'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2020,
@@ -41,7 +41,7 @@ module.exports = {
     {
       files: ['vite.config.ts', 'vitest.config.ts', 'playwright.config.ts', 'e2e/**/*.ts'],
       parserOptions: {
-        project: './tsconfig.node.json',
+        project: './tsconfig.json',
       },
       rules: {
         '@typescript-eslint/explicit-function-return-types': 'off',
@@ -75,7 +75,7 @@ module.exports = {
     {
       files: ['src/test/setup.ts'],
       parserOptions: {
-        project: './tsconfig.node.json',
+        project: './tsconfig.json',
       },
     },
   ],
