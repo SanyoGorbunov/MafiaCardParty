@@ -141,3 +141,12 @@ vite.config.ts.timestamp-*
 test-results/
 playwright-report/
 playwright/.cache/
+
+# Generated TypeScript and JavaScript from config files
+*.d.ts
+*.d.ts.map
+!src/**/*.d.ts
+vite.config.js
+vitest.config.js
+playwright.config.js
+e2e/**/*.js
