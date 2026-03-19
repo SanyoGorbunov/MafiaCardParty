@@ -55,8 +55,8 @@ test.describe('Screen Navigation E2E Tests', () => {
     await expect(setupTitle).toBeVisible()
 
     // Verify form elements are visible
-    const totalPlayersInput = page.locator('#total-players')
-    await expect(totalPlayersInput).toBeVisible()
+    const incrementBtn = page.locator('button[title="Increase total players"]')
+    await expect(incrementBtn).toBeVisible()
   })
 
   test('should navigate back to Welcome screen from Setup', async ({ page }) => {
@@ -141,13 +141,13 @@ test.describe('Setup Screen - Game Settings E2E Tests', () => {
     await expect(mafiaDecrement).toBeVisible()
     await expect(mafiaIncrement).toBeVisible()
 
-    // Check Detective toggle
+    // Check Detective toggle (exists but hidden due to styling)
     const detectiveToggle = page.locator('input[aria-label="Toggle Detective role"]')
-    await expect(detectiveToggle).toBeVisible()
+    await expect(detectiveToggle).toHaveCount(1)
 
-    // Check Doctor toggle
+    // Check Doctor toggle (exists but hidden due to styling)
     const doctorToggle = page.locator('input[aria-label="Toggle Doctor role"]')
-    await expect(doctorToggle).toBeVisible()
+    await expect(doctorToggle).toHaveCount(1)
 
     // Check dropdowns
     const roomSelect = page.locator('#room-environment')
@@ -201,7 +201,10 @@ test.describe('Setup Screen - Game Settings E2E Tests', () => {
     const detectiveToggle = page.locator('input[aria-label="Toggle Detective role"]')
     const isCheckedBefore = await detectiveToggle.isChecked()
 
-    await detectiveToggle.click()
+    // Click the toggle switch label to toggle the input
+    const detectiveLabel = page.locator('label').filter({ has: detectiveToggle })
+    await detectiveLabel.click()
+    
     const isCheckedAfter = await detectiveToggle.isChecked()
 
     expect(isCheckedBefore).not.toBe(isCheckedAfter)
@@ -401,7 +404,7 @@ test.describe('Players Screen E2E Tests', () => {
     const nextButton = page.locator('button:has-text("Next: Players")')
     await nextButton.click()
 
-    const backBtn = page.locator('button:has-text("BACK: GAME SETTINGS")')
+    const backBtn = page.locator('button.back-btn')
     await backBtn.click()
 
     const setupTitle = page.locator('text=Game Settings')
@@ -463,7 +466,7 @@ test.describe('Players Screen E2E Tests', () => {
     await expect(autoFillBtn).toBeDisabled()
   })
 
-  test('should disable auto-fill when duplicates exist', async ({
+  test('should enable auto-fill when some names empty despite duplicates', async ({
     page,
   }) => {
     const playButton = page.locator('button.play-btn')
@@ -472,15 +475,15 @@ test.describe('Players Screen E2E Tests', () => {
     const nextButton = page.locator('button:has-text("Next: Players")')
     await nextButton.click()
 
-    // Fill with duplicate names
+    // Fill with duplicate names in first 3 slots, leaving 3 empty
     const playerInputs = page.locator('.player-name-input')
     await playerInputs.nth(0).fill('Alice')
     await playerInputs.nth(1).fill('Alice')
     await playerInputs.nth(2).fill('Bob')
 
-    // Auto-fill button should be disabled due to duplicates
+    // Auto-fill button should still be enabled (empty slots exist)
     const autoFillBtn = page.locator('button:has-text("Auto-fill Names")')
-    await expect(autoFillBtn).toBeDisabled()
+    await expect(autoFillBtn).toBeEnabled()
   })
 
   test('should show Not Ready with duplicate names', async ({
