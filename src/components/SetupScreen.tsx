@@ -5,6 +5,7 @@
 
 import { useState } from 'react'
 import { GameSettings, RoomEnvironment, RoleCardStyle, DEFAULT_GAME_SETTINGS } from '../types'
+import { LanguageSwitch } from './LanguageSwitch'
 
 interface SetupScreenProps {
   onBack?: () => void
@@ -104,6 +105,7 @@ export function SetupScreen({ onBack = () => {}, onNext = () => {}, initialSetti
             ← Back
           </button>
         </div>
+        <LanguageSwitch />
       </header>
 
       <main className="setup-main">
@@ -294,7 +296,6 @@ export function SetupScreen({ onBack = () => {}, onNext = () => {}, initialSetti
           >
             Next: Players <span className="next-chevron">›</span>
           </button>
-          <p className="helper-text">FILL ALL FIELDS TO PROCEED</p>
         </div>
       </main>
     </div>

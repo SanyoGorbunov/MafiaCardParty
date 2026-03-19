@@ -3,6 +3,8 @@
  * This is a minimal placeholder; full game logic is out of scope for MAF-21
  */
 
+import { LanguageSwitch } from './LanguageSwitch'
+
 interface GameScreenProps {
   onEnd?: () => void
 }
@@ -16,6 +18,7 @@ export function GameScreen({ onEnd = () => {} }: GameScreenProps) {
             🏠 Home
           </button>
         </div>
+        <LanguageSwitch />
       </header>
 
       <main className="game-main">

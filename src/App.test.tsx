@@ -377,7 +377,7 @@ describe('App Component', () => {
   })
 
   describe('PlayersScreen rendering', () => {
-    it('renders the REGISTRY title', async () => {
+    it('renders the Player Names title', async () => {
       const user = userEvent.setup()
       render(<App />)
 
@@ -387,10 +387,10 @@ describe('App Component', () => {
       const nextButton = screen.getByRole('button', { name: /next: players/i })
       await user.click(nextButton)
 
-      expect(screen.getByText('REGISTRY')).toBeInTheDocument()
+      expect(screen.getByText('Player Names')).toBeInTheDocument()
     })
 
-    it('renders registry description text', async () => {
+    it('renders player names section description text', async () => {
       const user = userEvent.setup()
       render(<App />)
 
@@ -617,7 +617,7 @@ describe('App Component', () => {
       const nextButton = screen.getByRole('button', { name: /next: players/i })
       await user.click(nextButton)
 
-      expect(screen.getByText('REGISTRY')).toBeInTheDocument()
+      expect(screen.getByText('Player Names')).toBeInTheDocument()
 
       const backButton = screen.getByRole('button', { name: /back: game settings/i })
       await user.click(backButton)
@@ -700,7 +700,7 @@ describe('App Component', () => {
       // Go to Players
       const nextButton = screen.getByRole('button', { name: /next: players/i })
       await user.click(nextButton)
-      expect(screen.getByText('REGISTRY')).toBeInTheDocument()
+      expect(screen.getByText('Player Names')).toBeInTheDocument()
 
       // Auto-fill names
       const autoFillButton = screen.getByRole('button', { name: /auto-fill names/i })

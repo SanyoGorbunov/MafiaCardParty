@@ -254,8 +254,8 @@ test.describe('Players Screen E2E Tests', () => {
     const nextButton = page.locator('button:has-text("Next: Players")')
     await nextButton.click()
 
-    const registryTitle = page.locator('text=REGISTRY')
-    await expect(registryTitle).toBeVisible()
+    const playerNamesTitle = page.locator('text=Player Names')
+    await expect(playerNamesTitle).toBeVisible()
 
     const stepIndicator = page.locator('text=STEP 2 OF 2')
     await expect(stepIndicator).toBeVisible()
@@ -422,6 +422,125 @@ test.describe('Players Screen E2E Tests', () => {
     expect(count).toBe(6) // 6 players, all empty initially
   })
 
+  test('should show duplicate badges when duplicate names are entered', async ({
+    page,
+  }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    // Fill with duplicate names
+    const playerInputs = page.locator('.player-name-input')
+    await playerInputs.nth(0).fill('Alice')
+    await playerInputs.nth(1).fill('Alice')
+    await playerInputs.nth(2).fill('Bob')
+
+    // Duplicate badges should be visible
+    const duplicateBadges = page.locator('.duplicate-badge')
+    const count = await duplicateBadges.count()
+    expect(count).toBeGreaterThanOrEqual(2)
+  })
+
+  test('should disable auto-fill when all names are filled', async ({
+    page,
+  }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    // Fill all names
+    const playerInputs = page.locator('.player-name-input')
+    for (let i = 0; i < 6; i++) {
+      await playerInputs.nth(i).fill(`Player ${i + 1}`)
+    }
+
+    // Auto-fill button should be disabled when all filled
+    const autoFillBtn = page.locator('button:has-text("Auto-fill Names")')
+    await expect(autoFillBtn).toBeDisabled()
+  })
+
+  test('should disable auto-fill when duplicates exist', async ({
+    page,
+  }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    // Fill with duplicate names
+    const playerInputs = page.locator('.player-name-input')
+    await playerInputs.nth(0).fill('Alice')
+    await playerInputs.nth(1).fill('Alice')
+    await playerInputs.nth(2).fill('Bob')
+
+    // Auto-fill button should be disabled due to duplicates
+    const autoFillBtn = page.locator('button:has-text("Auto-fill Names")')
+    await expect(autoFillBtn).toBeDisabled()
+  })
+
+  test('should show Not Ready with duplicate names', async ({
+    page,
+  }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    // Fill with duplicate names
+    const playerInputs = page.locator('.player-name-input')
+    await playerInputs.nth(0).fill('Alice')
+    await playerInputs.nth(1).fill('Alice')
+    await playerInputs.nth(2).fill('Bob')
+
+    // Summary card should show "Not Ready"
+    const notReadyBadge = page.locator('text=Not Ready')
+    await expect(notReadyBadge).toBeVisible()
+
+    // START GAME button should be disabled
+    const startBtn = page.locator('button:has-text("START GAME")')
+    await expect(startBtn).toBeDisabled()
+  })
+
+  test('should remove duplicate badge when duplicate is resolved', async ({
+    page,
+  }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    // Fill with duplicate names
+    const playerInputs = page.locator('.player-name-input')
+    await playerInputs.nth(0).fill('Alice')
+    await playerInputs.nth(1).fill('Alice')
+    await playerInputs.nth(2).fill('Bob')
+
+    // Duplicate badges should be visible
+    let duplicateBadges = page.locator('.duplicate-badge')
+    let count = await duplicateBadges.count()
+    expect(count).toBeGreaterThanOrEqual(2)
+
+    // Change one name to remove duplicate
+    await playerInputs.nth(1).fill('Charlie')
+
+    // Duplicate badges should be gone
+    duplicateBadges = page.locator('.duplicate-badge')
+    count = await duplicateBadges.count()
+    expect(count).toBe(0)
+
+    // Ready badge should be visible (still need to fill remaining empty ones)
+    // Actually it won't be ready yet because some are empty, so check Not Ready
+    const notReadyBadge = page.locator('text=Not Ready')
+    await expect(notReadyBadge).toBeVisible()
+  })
+
   test('full navigation flow: Welcome → Setup → Players → Game', async ({
     page,
   }) => {
@@ -440,8 +559,8 @@ test.describe('Players Screen E2E Tests', () => {
     const nextButton = page.locator('button:has-text("Next: Players")')
     await nextButton.click()
 
-    const registryTitle = page.locator('text=REGISTRY')
-    await expect(registryTitle).toBeVisible()
+    const playerNamesTitle = page.locator('text=Player Names')
+    await expect(playerNamesTitle).toBeVisible()
 
     // Auto-fill and start game
     const autoFillBtn = page.locator('button:has-text("Auto-fill Names")')

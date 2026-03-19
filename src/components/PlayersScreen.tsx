@@ -5,6 +5,7 @@
 
 import { useState } from 'react'
 import { GameSettings } from '../types'
+import { LanguageSwitch } from './LanguageSwitch'
 
 interface PlayersScreenProps {
   settings: GameSettings
@@ -46,6 +47,33 @@ export function PlayersScreen({
   const uniqueNames = new Set(trimmedNames.map((name) => name.toLowerCase()))
   const allNamesUnique = uniqueNames.size === trimmedNames.length
   const isValid = allNamesValid && allNamesUnique
+
+  // Check if there are any empty slots to fill
+  const hasEmptySlots = playerNames.some((name) => name.trim() === '')
+
+  // Identify which names are duplicates
+  const getDuplicateIndices = () => {
+    const nameCounts = new Map<string, number[]>()
+    trimmedNames.forEach((name, index) => {
+      if (name.length > 0) {
+        const lowerName = name.toLowerCase()
+        if (!nameCounts.has(lowerName)) {
+          nameCounts.set(lowerName, [])
+        }
+        nameCounts.get(lowerName)!.push(index)
+      }
+    })
+    
+    const duplicateSet = new Set<number>()
+    nameCounts.forEach((indices) => {
+      if (indices.length > 1) {
+        indices.forEach((index) => duplicateSet.add(index))
+      }
+    })
+    return duplicateSet
+  }
+
+  const duplicateIndices = getDuplicateIndices()
 
   const handlePlayerNameChange = (index: number, value: string) => {
     const newNames = [...playerNames]
@@ -95,24 +123,38 @@ export function PlayersScreen({
             ← Back
           </button>
         </div>
-        <div className="players-header-right">
-          <span className="players-step-label">STEP 2 OF 2</span>
-          <h1 className="players-screen-title">Identify Players</h1>
-        </div>
+        <LanguageSwitch />
       </header>
 
       <main className="players-main">
+        {/* Title and Step Indicator */}
+        <div className="players-title-section">
+          <h1 className="players-screen-title">Identify Players</h1>
+          <div className="players-step-indicator">
+            <span className="step-label">Step 2 of 2</span>
+            <div className="step-progress-bar">
+              <div className="step-progress-fill" style={{ width: '100%' }} />
+            </div>
+          </div>
+        </div>
+
         {/* Registry Section */}
         <section className="players-section">
-          <div className="players-section-header">
-            <h2 className="players-section-title">REGISTRY</h2>
-            <p className="players-section-description">
-              Enter the names of the participants who will survive—or die—tonight.
-            </p>
+          <div className="settings-section-header">
+            <span className="settings-section-icon">👥</span>
+            <div className="settings-section-text">
+              <h2 className="settings-section-title">Player Names</h2>
+              <p className="settings-section-subtitle">Enter the names of the participants who will survive—or die—tonight.</p>
+            </div>
           </div>
 
           {/* Auto-fill Button */}
-          <button className="autofill-btn" onClick={handleAutoFill} type="button">
+          <button 
+            className="autofill-btn" 
+            onClick={handleAutoFill} 
+            type="button"
+            disabled={!hasEmptySlots}
+          >
             ✨ Auto-fill Names
           </button>
 
@@ -125,6 +167,9 @@ export function PlayersScreen({
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   <label className="player-row-label">PLAYER NAME</label>
+                  {duplicateIndices.has(index) && (
+                    <span className="duplicate-badge">Duplicate</span>
+                  )}
                   {name.trim() === '' && (
                     <span className="required-badge">Required</span>
                   )}
@@ -152,9 +197,9 @@ export function PlayersScreen({
               </p>
             </div>
             <span
-              className={`ready-badge ${allNamesValid ? 'ready' : 'not-ready'}`}
+              className={`ready-badge ${isValid ? 'ready' : 'not-ready'}`}
             >
-              {allNamesValid ? 'Ready' : 'Not Ready'}
+              {isValid ? 'Ready' : 'Not Ready'}
             </span>
           </div>
 
@@ -201,9 +246,6 @@ export function PlayersScreen({
             }
           >
             ▷ START GAME
-          </button>
-          <button className="back-settings-btn" onClick={onBack} title="Back to Game Settings">
-            ‹ BACK: GAME SETTINGS
           </button>
         </div>
       </main>

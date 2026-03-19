@@ -3,6 +3,8 @@
  * Features: Game title, illustration, Play button, How to Play link, language switch
  */
 
+import { LanguageSwitch } from './LanguageSwitch'
+
 interface WelcomeScreenProps {
   onPlay?: () => void
   onHowToPlay?: () => void
@@ -18,15 +20,7 @@ export function WelcomeScreen({
     <div className="welcome-screen">
       {/* Header with language switch */}
       <header className="welcome-header">
-        <div className="language-switch">
-          <button
-            className="language-btn"
-            onClick={() => onLanguageChange('EN')}
-            title="Language"
-          >
-            🌐 EN
-          </button>
-        </div>
+        <LanguageSwitch onLanguageChange={onLanguageChange} />
       </header>
 
       {/* Main content */}

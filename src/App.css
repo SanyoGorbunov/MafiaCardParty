@@ -726,15 +726,6 @@ input:focus + .toggle-slider {
   margin-left: 0.25rem;
 }
 
-.helper-text {
-  font-size: 0.7rem;
-  color: var(--color-text-muted);
-  text-align: center;
-  margin: 0;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
 /* ============================================
    Players Screen Styles
    ============================================ */
@@ -752,8 +743,7 @@ input:focus + .toggle-slider {
   padding: 1rem 1.25rem;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
+  align-items: center;
 }
 
 .players-header-left {
@@ -761,27 +751,25 @@ input:focus + .toggle-slider {
   align-items: center;
 }
 
-.players-header-right {
+.players-title-section {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  align-items: flex-end;
-}
-
-.players-step-label {
-  font-size: 0.75rem;
-  color: var(--color-btn-play);
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  gap: 0.875rem;
 }
 
 .players-screen-title {
-  font-size: 1.25rem;
+  font-size: 1.75rem;
   font-weight: 700;
   margin: 0;
   letter-spacing: 1px;
-  text-transform: capitalize;
+  text-transform: uppercase;
   color: var(--color-text-primary);
+}
+
+.players-step-indicator {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .players-main {
@@ -803,29 +791,6 @@ input:focus + .toggle-slider {
   gap: 1rem;
 }
 
-.players-section-header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.players-section-title {
-  font-size: 1.5rem;
-  font-weight: 900;
-  margin: 0;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--color-text-primary);
-  font-style: italic;
-}
-
-.players-section-description {
-  font-size: 0.9375rem;
-  color: var(--color-text-secondary);
-  margin: 0;
-  line-height: 1.5;
-}
-
 /* Auto-fill Button */
 .autofill-btn {
   align-self: flex-end;
@@ -842,12 +807,18 @@ input:focus + .toggle-slider {
   gap: 0.5rem;
 }
 
-.autofill-btn:hover {
+.autofill-btn:hover:not(:disabled) {
   color: var(--color-btn-play-hover);
 }
 
-.autofill-btn:active {
+.autofill-btn:active:not(:disabled) {
   transform: scale(0.98);
+}
+
+.autofill-btn:disabled {
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 /* Player Inputs Container */
@@ -885,6 +856,16 @@ input:focus + .toggle-slider {
 }
 
 .required-badge {
+  margin-left: auto;
+  font-size: 0.65rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--color-accent-pink);
+  border-radius: 12px;
+  color: var(--color-accent-pink);
+  font-weight: 600;
+}
+
+.duplicate-badge {
   margin-left: auto;
   font-size: 0.65rem;
   padding: 0.25rem 0.5rem;
@@ -1074,34 +1055,6 @@ input:focus + .toggle-slider {
   background: rgba(107, 94, 254, 0.3);
   color: rgba(255, 255, 255, 0.4);
   cursor: not-allowed;
-}
-
-.back-settings-btn {
-  width: 100%;
-  padding: 1rem 1.25rem;
-  background: var(--color-bg-card);
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-bg-card-border);
-  border-radius: 12px;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 200ms ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  min-height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.back-settings-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--color-bg-card-border);
-}
-
-.back-settings-btn:active {
-  transform: scale(0.99);
 }
 
 /* ============================================
