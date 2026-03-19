@@ -462,17 +462,17 @@ describe('App Component', () => {
       expect(startButton).toBeDisabled()
     })
 
-    it('renders BACK: GAME SETTINGS button', async () => {
+    it('renders back button', async () => {
       const user = userEvent.setup()
       render(<App />)
 
       const playButton = screen.getByRole('button', { name: /play now/i })
       await user.click(playButton)
 
-      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      const nextButton = screen.getByRole('button', { name: /next/i })
       await user.click(nextButton)
 
-      expect(screen.getByRole('button', { name: /back: game settings/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument()
     })
 
     it('displays "Not Ready" badge initially', async () => {
@@ -614,12 +614,12 @@ describe('App Component', () => {
       const playButton = screen.getByRole('button', { name: /play now/i })
       await user.click(playButton)
 
-      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      const nextButton = screen.getByRole('button', { name: /next/i })
       await user.click(nextButton)
 
       expect(screen.getByText('Player Names')).toBeInTheDocument()
 
-      const backButton = screen.getByRole('button', { name: /back: game settings/i })
+      const backButton = screen.getByRole('button', { name: /back/i })
       await user.click(backButton)
 
       expect(screen.getByText('Game Settings')).toBeInTheDocument()
@@ -727,11 +727,11 @@ describe('App Component', () => {
       expect(screen.getByText('7')).toBeInTheDocument()
 
       // Go to Players
-      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      const nextButton = screen.getByRole('button', { name: /next/i })
       await user.click(nextButton)
 
       // Go back to Setup
-      const backButton = screen.getByRole('button', { name: /back: game settings/i })
+      const backButton = screen.getByRole('button', { name: /back/i })
       await user.click(backButton)
 
       // Verify number of inputs is still 7
