@@ -4,6 +4,8 @@
 export enum ScreenType {
   WELCOME = 'WELCOME',
   SETUP = 'SETUP',
+  PLAYERS = 'PLAYERS',
+  GAME = 'GAME',
 }
 
 export type Screen = ScreenType
@@ -49,3 +51,8 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   roomEnvironment: RoomEnvironment.MIDNIGHT_MANSION,
   roleCardStyle: RoleCardStyle.VINTAGE_SKETCH_ART,
 }
+
+/**
+ * Array of player names
+ */
+export type PlayerNames = string[]

@@ -9,10 +9,11 @@ import { GameSettings, RoomEnvironment, RoleCardStyle, DEFAULT_GAME_SETTINGS } f
 interface SetupScreenProps {
   onBack?: () => void
   onNext?: (settings: GameSettings) => void
+  initialSettings?: GameSettings
 }
 
-export function SetupScreen({ onBack = () => {}, onNext = () => {} }: SetupScreenProps) {
-  const [settings, setSettings] = useState<GameSettings>(DEFAULT_GAME_SETTINGS)
+export function SetupScreen({ onBack = () => {}, onNext = () => {}, initialSettings }: SetupScreenProps) {
+  const [settings, setSettings] = useState<GameSettings>(initialSettings || DEFAULT_GAME_SETTINGS)
 
   // Validation logic
   const isValidTotalPlayers = settings.totalPlayers >= 4 && settings.totalPlayers <= 16

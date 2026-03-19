@@ -375,4 +375,367 @@ describe('App Component', () => {
       expect(mafiaValues.length).toBeGreaterThan(0)
     })
   })
+
+  describe('PlayersScreen rendering', () => {
+    it('renders the REGISTRY title', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      expect(screen.getByText('REGISTRY')).toBeInTheDocument()
+    })
+
+    it('renders registry description text', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      expect(
+        screen.getByText('Enter the names of the participants who will survive—or die—tonight.')
+      ).toBeInTheDocument()
+    })
+
+    it('renders the correct number of player input fields', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      // Default is 6 players
+      const inputs = screen.getAllByLabelText(/player \d+ name/i)
+      expect(inputs).toHaveLength(6)
+    })
+
+    it('renders Auto-fill Names button', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      expect(screen.getByRole('button', { name: /auto-fill names/i })).toBeInTheDocument()
+    })
+
+    it('renders the Game Setup summary card', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      expect(screen.getByText('Game Setup')).toBeInTheDocument()
+      expect(screen.getByText(/standard \d+-player distribution/i)).toBeInTheDocument()
+    })
+
+    it('renders START GAME button', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      const startButton = screen.getByRole('button', { name: /start game/i })
+      expect(startButton).toBeInTheDocument()
+      expect(startButton).toBeDisabled()
+    })
+
+    it('renders BACK: GAME SETTINGS button', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      expect(screen.getByRole('button', { name: /back: game settings/i })).toBeInTheDocument()
+    })
+
+    it('displays "Not Ready" badge initially', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      expect(screen.getByText('Not Ready')).toBeInTheDocument()
+    })
+  })
+
+  describe('PlayersScreen interactions', () => {
+    it('allows typing in player name inputs', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      const firstInput = screen.getByLabelText('Player 1 name')
+      await user.type(firstInput, 'Vincenzo')
+
+      expect((firstInput as HTMLInputElement).value).toBe('Vincenzo')
+    })
+
+    it('auto-fill fills empty inputs with themed names', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      const autoFillButton = screen.getByRole('button', { name: /auto-fill names/i })
+      await user.click(autoFillButton)
+
+      // Check that inputs are now filled
+      const inputs = screen.getAllByLabelText(/player \d+ name/i) as HTMLInputElement[]
+      inputs.forEach((input) => {
+        expect(input.value).not.toBe('')
+      })
+    })
+
+    it('auto-fill skips already-filled inputs', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      const firstInput = screen.getByLabelText('Player 1 name')
+      await user.type(firstInput, 'Alice')
+
+      expect((firstInput as HTMLInputElement).value).toBe('Alice')
+
+      const autoFillButton = screen.getByRole('button', { name: /auto-fill names/i })
+      await user.click(autoFillButton)
+
+      // First input should still be 'Alice'
+      expect((firstInput as HTMLInputElement).value).toBe('Alice')
+
+      // Other inputs should be filled
+      const secondInput = screen.getByLabelText('Player 2 name')
+      expect((secondInput as HTMLInputElement).value).not.toBe('')
+    })
+
+    it('START GAME is disabled when any input is empty', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      const startButton = screen.getByRole('button', { name: /start game/i })
+      expect((startButton as HTMLButtonElement).disabled).toBe(true)
+    })
+
+    it('START GAME becomes enabled when all names are filled with unique values', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      const autoFillButton = screen.getByRole('button', { name: /auto-fill names/i })
+      await user.click(autoFillButton)
+
+      const startButton = screen.getByRole('button', { name: /start game/i })
+      expect((startButton as HTMLButtonElement).disabled).toBe(false)
+    })
+
+    it('START GAME is disabled when duplicate names are entered', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      const autoFillButton = screen.getByRole('button', { name: /auto-fill names/i })
+      await user.click(autoFillButton)
+
+      const firstInput = screen.getByLabelText('Player 1 name')
+      const secondInput = screen.getByLabelText('Player 2 name')
+
+      // Clear first input and set it to same as second
+      await user.clear(firstInput)
+      await user.type(firstInput, (secondInput as HTMLInputElement).value)
+
+      const startButton = screen.getByRole('button', { name: /start game/i })
+      expect((startButton as HTMLButtonElement).disabled).toBe(true)
+    })
+
+    it('Back button navigates back to Setup screen', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      expect(screen.getByText('REGISTRY')).toBeInTheDocument()
+
+      const backButton = screen.getByRole('button', { name: /back: game settings/i })
+      await user.click(backButton)
+
+      expect(screen.getByText('Game Settings')).toBeInTheDocument()
+    })
+
+    it('START GAME navigates to Game screen', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      const autoFillButton = screen.getByRole('button', { name: /auto-fill names/i })
+      await user.click(autoFillButton)
+
+      const startButton = screen.getByRole('button', { name: /start game/i })
+      await user.click(startButton)
+
+      expect(screen.getByText('Game in Progress')).toBeInTheDocument()
+    })
+
+    it('displays "Ready" badge when all names are valid', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      const autoFillButton = screen.getByRole('button', { name: /auto-fill names/i })
+      await user.click(autoFillButton)
+
+      expect(screen.getByText('Ready')).toBeInTheDocument()
+    })
+
+    it('displays Required badges only on empty inputs', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      // Initially all should show Required
+      let requiredBadges = screen.getAllByText('Required')
+      expect(requiredBadges).toHaveLength(6)
+
+      // Fill one input
+      const firstInput = screen.getByLabelText('Player 1 name')
+      await user.type(firstInput, 'Vincenzo')
+
+      // Now should have 5 Required badges
+      requiredBadges = screen.getAllByText('Required')
+      expect(requiredBadges).toHaveLength(5)
+    })
+  })
+
+  describe('Full navigation flow', () => {
+    it('supports full flow: Welcome → Setup → Players → Game', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      // Start at Welcome
+      expect(screen.getByText('MAFIA')).toBeInTheDocument()
+
+      // Go to Setup
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+      expect(screen.getByText('Game Settings')).toBeInTheDocument()
+
+      // Go to Players
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+      expect(screen.getByText('REGISTRY')).toBeInTheDocument()
+
+      // Auto-fill names
+      const autoFillButton = screen.getByRole('button', { name: /auto-fill names/i })
+      await user.click(autoFillButton)
+
+      // Go to Game
+      const startButton = screen.getByRole('button', { name: /start game/i })
+      await user.click(startButton)
+      expect(screen.getByText('Game in Progress')).toBeInTheDocument()
+    })
+
+    it('persists game settings when navigating back from Players to Setup', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      const playButton = screen.getByRole('button', { name: /play now/i })
+      await user.click(playButton)
+
+      // Change settings: increment players to 7
+      const incrementBtn = screen.getByTitle('Increase total players')
+      await user.click(incrementBtn)
+
+      // Verify change
+      expect(screen.getByText('7')).toBeInTheDocument()
+
+      // Go to Players
+      const nextButton = screen.getByRole('button', { name: /next: players/i })
+      await user.click(nextButton)
+
+      // Go back to Setup
+      const backButton = screen.getByRole('button', { name: /back: game settings/i })
+      await user.click(backButton)
+
+      // Verify number of inputs is still 7
+      expect(screen.getByText('7')).toBeInTheDocument()
+    })
+  })
 })

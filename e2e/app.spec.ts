@@ -244,6 +244,218 @@ test.describe('Setup Screen - Game Settings E2E Tests', () => {
   })
 })
 
+test.describe('Players Screen E2E Tests', () => {
+  test('should display Players screen after clicking Next on Setup', async ({
+    page,
+  }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    const registryTitle = page.locator('text=REGISTRY')
+    await expect(registryTitle).toBeVisible()
+
+    const stepIndicator = page.locator('text=STEP 2 OF 2')
+    await expect(stepIndicator).toBeVisible()
+  })
+
+  test('should display correct number of player input fields', async ({
+    page,
+  }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    // Default is 6 players
+    const playerInputs = page.locator('.player-name-input')
+    const count = await playerInputs.count()
+    expect(count).toBe(6)
+  })
+
+  test('should allow typing player names', async ({ page }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    const firstInput = page.locator('.player-name-input').first()
+    await firstInput.fill('Vincenzo')
+
+    const value = await firstInput.inputValue()
+    expect(value).toBe('Vincenzo')
+  })
+
+  test('should have Auto-fill Names button', async ({ page }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    const autoFillBtn = page.locator('button:has-text("Auto-fill Names")')
+    await expect(autoFillBtn).toBeVisible()
+    await expect(autoFillBtn).toBeEnabled()
+  })
+
+  test('should auto-fill names when button clicked', async ({ page }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    const autoFillBtn = page.locator('button:has-text("Auto-fill Names")')
+    await autoFillBtn.click()
+
+    // Check that inputs are now filled
+    const playerInputs = page.locator('.player-name-input')
+    const firstValue = await playerInputs.first().inputValue()
+    expect(firstValue).not.toBe('')
+  })
+
+  test('should display Ready badge when all names are filled', async ({
+    page,
+  }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    const autoFillBtn = page.locator('button:has-text("Auto-fill Names")')
+    await autoFillBtn.click()
+
+    const readyBadge = page.locator('text=Ready')
+    await expect(readyBadge).toBeVisible()
+  })
+
+  test('should display Not Ready badge initially', async ({ page }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    const notReadyBadge = page.locator('text=Not Ready')
+    await expect(notReadyBadge).toBeVisible()
+  })
+
+  test('should have Game Setup summary card', async ({ page }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    const summaryCard = page.locator('text=Game Setup')
+    await expect(summaryCard).toBeVisible()
+  })
+
+  test('START GAME button should be disabled until all names filled', async ({
+    page,
+  }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    const startBtn = page.locator('button:has-text("START GAME")')
+    await expect(startBtn).toBeDisabled()
+
+    // Auto-fill names
+    const autoFillBtn = page.locator('button:has-text("Auto-fill Names")')
+    await autoFillBtn.click()
+
+    await expect(startBtn).toBeEnabled()
+  })
+
+  test('should navigate to Game screen on START GAME', async ({ page }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    const autoFillBtn = page.locator('button:has-text("Auto-fill Names")')
+    await autoFillBtn.click()
+
+    const startBtn = page.locator('button:has-text("START GAME")')
+    await startBtn.click()
+
+    const gameTitle = page.locator('text=Game in Progress')
+    await expect(gameTitle).toBeVisible()
+  })
+
+  test('should navigate back to Setup screen on Back button', async ({
+    page,
+  }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    const backBtn = page.locator('button:has-text("BACK: GAME SETTINGS")')
+    await backBtn.click()
+
+    const setupTitle = page.locator('text=Game Settings')
+    await expect(setupTitle).toBeVisible()
+  })
+
+  test('should display Required badges on empty inputs', async ({
+    page,
+  }) => {
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    const requiredBadges = page.locator('text=Required')
+    const count = await requiredBadges.count()
+    expect(count).toBe(6) // 6 players, all empty initially
+  })
+
+  test('full navigation flow: Welcome → Setup → Players → Game', async ({
+    page,
+  }) => {
+    // Start at Welcome
+    const title = page.locator('h1:has-text("MAFIA")')
+    await expect(title).toBeVisible()
+
+    // Go to Setup
+    const playButton = page.locator('button.play-btn')
+    await playButton.click()
+
+    const setupTitle = page.locator('text=Game Settings')
+    await expect(setupTitle).toBeVisible()
+
+    // Go to Players
+    const nextButton = page.locator('button:has-text("Next: Players")')
+    await nextButton.click()
+
+    const registryTitle = page.locator('text=REGISTRY')
+    await expect(registryTitle).toBeVisible()
+
+    // Auto-fill and start game
+    const autoFillBtn = page.locator('button:has-text("Auto-fill Names")')
+    await autoFillBtn.click()
+
+    const startBtn = page.locator('button:has-text("START GAME")')
+    await startBtn.click()
+
+    // Verify Game screen
+    const gameTitle = page.locator('text=Game in Progress')
+    await expect(gameTitle).toBeVisible()
+  })
+})
+
 test('should have proper page title', async ({ page }) => {
   await expect(page).toHaveTitle('Mafia Card Party')
 })

@@ -1,2 +1,4 @@
 export { WelcomeScreen } from './WelcomeScreen'
 export { SetupScreen } from './SetupScreen'
+export { PlayersScreen } from './PlayersScreen'
+export { GameScreen } from './GameScreen'
