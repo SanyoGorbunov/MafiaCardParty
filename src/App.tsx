@@ -15,7 +15,7 @@ function saveGameSettings(settings: GameSettings): void {
 
 function loadGameSettings(): GameSettings | null {
   const stored = localStorage.getItem(STORAGE_KEYS.GAME_SETTINGS)
-  return stored ? JSON.parse(stored) : null
+  return stored ? (JSON.parse(stored) as GameSettings) : null
 }
 
 function clearGameSettings(): void {

@@ -302,12 +302,12 @@ describe('App Component', () => {
       const playButton = screen.getByRole('button', { name: /play now/i })
       await user.click(playButton)
 
-      const roomSelect = screen.getByLabelText(/room environment/i) as HTMLSelectElement
-      const initialValue = roomSelect.value
+      const roomSelect = screen.getByLabelText(/room environment/i)
+      const initialValue = (roomSelect as HTMLSelectElement).value
 
       await user.selectOptions(roomSelect, 'FOGGY_HARBOR')
-      expect(roomSelect.value).toBe('FOGGY_HARBOR')
-      expect(roomSelect.value).not.toBe(initialValue)
+      expect((roomSelect as HTMLSelectElement).value).toBe('FOGGY_HARBOR')
+      expect((roomSelect as HTMLSelectElement).value).not.toBe(initialValue)
     })
 
     it('allows changing Role Card Style dropdown', async () => {
@@ -317,12 +317,12 @@ describe('App Component', () => {
       const playButton = screen.getByRole('button', { name: /play now/i })
       await user.click(playButton)
 
-      const cardStyleSelect = screen.getByLabelText(/role card style/i) as HTMLSelectElement
-      const initialValue = cardStyleSelect.value
+      const cardStyleSelect = screen.getByLabelText(/role card style/i)
+      const initialValue = (cardStyleSelect as HTMLSelectElement).value
 
       await user.selectOptions(cardStyleSelect, 'NEON_NOIR')
-      expect(cardStyleSelect.value).toBe('NEON_NOIR')
-      expect(cardStyleSelect.value).not.toBe(initialValue)
+      expect((cardStyleSelect as HTMLSelectElement).value).toBe('NEON_NOIR')
+      expect((cardStyleSelect as HTMLSelectElement).value).not.toBe(initialValue)
     })
 
     it('Next button is enabled with valid default settings', async () => {
@@ -520,9 +520,9 @@ describe('App Component', () => {
       await user.click(autoFillButton)
 
       // Check that inputs are now filled
-      const inputs = screen.getAllByLabelText(/player \d+ name/i) as HTMLInputElement[]
+      const inputs = screen.getAllByLabelText(/player \d+ name/i)
       inputs.forEach((input) => {
-        expect(input.value).not.toBe('')
+        expect((input as HTMLInputElement).value).not.toBe('')
       })
     })
 
